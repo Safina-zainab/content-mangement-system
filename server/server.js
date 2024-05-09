@@ -46,24 +46,24 @@ app.get("/get_student/:id", (req, res) => {
   });
 });
 
-// app.post("/edit_user/:id", (req, res) => {
-//   const id = req.params.id;
-//   const sql =
-//     "UPDATE student_details SET `name`=?, `email`=?, `age`=?, `gender`=? WHERE id=?";
-//     "UPDATE `student_details` SET `id`='[value-1]',`name`='[value-2]',`email`='[value-3]',`mobile`='[value-4]',`dob`='[value-5]' WHERE 1"
-//   const values = [
-//     req.body.name,
-//     req.body.email,
-//     req.body.age,
-//     req.body.gender,
-//     id,
-//   ];
-//   db.query(sql, values, (err, result) => {
-//     if (err)
-//       return res.json({ message: "Something unexpected has occured" + err });
-//     return res.json({ success: "Student updated successfully" });
-//   });
-// });
+app.post("/edit_user/:id", (req, res) => {
+  const id = req.params.id;
+  const sql =
+    "UPDATE student_details SET `name`=?, `email`=?, `mobile`=?, `dob`=? WHERE id=?";
+  const values = [
+    req.body.name,
+    req.body.email,
+    req.body.mobile,
+    req.body.dob,
+    id,
+  ];
+  db.query(sql, values, (err, result) => {
+    if (err)
+      return res.json({ message: "Something unexpected has occurred" + err });
+    return res.json({ success: "Student updated successfully" });
+  });
+});
+
 
 app.delete("/delete/:id", (req, res) => {
   const id = req.params.id;
