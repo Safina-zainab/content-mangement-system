@@ -20,7 +20,7 @@ const db = mysql.createConnection({
 
 app.post("/add_user", (req, res) => {
   const sql =
-  " INSERT INTO `student_details` (`name`, `email`, `mobile`, `dob`) VALUES ('', '', '', '')";
+  "INSERT INTO `student_details` (`name`, `email`, `mobile`, `dob`) VALUES (?, ?, ?, ?)";
   const values = [req.body.name, req.body.email, req.body.mobile, req.body.dob];
   db.query(sql, values, (err, result) => {
     if (err)
@@ -58,8 +58,10 @@ app.post("/edit_user/:id", (req, res) => {
     id,
   ];
   db.query(sql, values, (err, result) => {
-    if (err)
+    if (err) {
+      console.error("Error:", err);
       return res.json({ message: "Something unexpected has occurred" + err });
+    }
     return res.json({ success: "Student updated successfully" });
   });
 });
