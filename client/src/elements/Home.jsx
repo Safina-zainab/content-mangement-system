@@ -24,7 +24,7 @@ function Home() {
   }, [deleted])
 
   function handleDelete(id) {
-    axios.delete(`/http://localhost:5000/delete/${id}`)
+    axios.delete(`http://localhost:5000/delete/${id}`)
       .then((res) => {
         setDeleted(true)
       })
