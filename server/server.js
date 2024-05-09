@@ -20,7 +20,7 @@ const db = mysql.createConnection({
 
 app.post("/add_user", (req, res) => {
   const sql =
-  " INSERT INTO `student_details` (`id`, `name`, `email`, `mobile`, `dob`) VALUES ('', '', '', '', '')";
+  " INSERT INTO `student_details` (`name`, `email`, `mobile`, `dob`) VALUES ('', '', '', '')";
   const values = [req.body.name, req.body.email, req.body.mobile, req.body.dob];
   db.query(sql, values, (err, result) => {
     if (err)
@@ -29,27 +29,28 @@ app.post("/add_user", (req, res) => {
   });
 });
 
-// app.get("/students", (req, res) => {
-//   const sql = "SELECT * FROM student_details";
-//   db.query(sql, (err, result) => {
-//     if (err) res.json({ message: "Server error" });
-//     return res.json(result);
-//   });
-// });
+app.get("/students", (req, res) => {
+  const sql = "SELECT * FROM student_details";
+  db.query(sql, (err, result) => {
+    if (err) res.json({ message: "Server error" });
+    return res.json(result);
+  });
+});
 
-// app.get("/get_student/:id", (req, res) => {
-//   const id = req.params.id;
-//   const sql = "SELECT * FROM student_details WHERE `id`= ?";
-//   db.query(sql, [id], (err, result) => {
-//     if (err) res.json({ message: "Server error" });
-//     return res.json(result);
-//   });
-// });
+app.get("/get_student/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "SELECT * FROM student_details WHERE `id`= ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) res.json({ message: "Server error" });
+    return res.json(result);
+  });
+});
 
 // app.post("/edit_user/:id", (req, res) => {
 //   const id = req.params.id;
 //   const sql =
 //     "UPDATE student_details SET `name`=?, `email`=?, `age`=?, `gender`=? WHERE id=?";
+//     "UPDATE `student_details` SET `id`='[value-1]',`name`='[value-2]',`email`='[value-3]',`mobile`='[value-4]',`dob`='[value-5]' WHERE 1"
 //   const values = [
 //     req.body.name,
 //     req.body.email,
@@ -64,16 +65,16 @@ app.post("/add_user", (req, res) => {
 //   });
 // });
 
-// app.delete("/delete/:id", (req, res) => {
-//   const id = req.params.id;
-//   const sql = "DELETE FROM student_details WHERE id=?";
-//   const values = [id];
-//   db.query(sql, values, (err, result) => {
-//     if (err)
-//       return res.json({ message: "Something unexpected has occured" + err });
-//     return res.json({ success: "Student updated successfully" });
-//   });
-// });
+app.delete("/delete/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "DELETE FROM student_details WHERE id=?";
+  const values = [id];
+  db.query(sql, values, (err, result) => {
+    if (err)
+      return res.json({ message: "Something unexpected has occured" + err });
+    return res.json({ success: "Student updated successfully" });
+  });
+});
 
 app.listen(port, () => {
   console.log(`listening on port ${port} `);
