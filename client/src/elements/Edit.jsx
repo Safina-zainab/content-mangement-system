@@ -5,24 +5,28 @@ import axios from "axios";
 function Edit() {
   const [data, setData] = useState([]);
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  
   useEffect(() => {
     axios
-      .get(`/get_student/${id}`)
+      .get(`http://localhost:5000/get_student/${id}`)
       .then((res) => {
-        setData(res.data);
+        const formattedData = res.data.map(student => {
+          // Parse date and format it
+          const date = new Date(student.dob);
+          const formattedDate = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
+          return { ...student, dob: formattedDate };
+        });
+        setData(formattedData);
       })
       .catch((err) => console.log(err));
   }, [id]);
-
-  const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
 
     axios
-      .post(`/edit_user/${id}`, data[0])
+      .post(`http://localhost:5000/edit_user/${id}`, data[0])
       .then((res) => {
         navigate("/");
         console.log(res);
@@ -31,14 +35,15 @@ function Edit() {
   }
 
   return (
-    <div className="container-fluid">
-      <h1>User {id}</h1>
-      <Link to="/" className="btn btn-success">
-        Back
-      </Link>
-      {data.map((student) => {
-        return (
-          <form onSubmit={handleSubmit}>
+    <div className="container-fluid mt-4" style={{ maxWidth: "600px" }}>
+      <div className="border rounded shadow p-4">
+        <h1>Update Student
+        <Link to="/" className="btn btn-success"  style={{ marginLeft: "30%" }}>
+          Back
+        </Link>
+        </h1>
+        {data.map((student) => (
+          <form key={student.id} onSubmit={handleSubmit}>
             <div className="form-group my-3">
               <label htmlFor="name">Name</label>
               <input
@@ -49,6 +54,7 @@ function Edit() {
                 onChange={(e) =>
                   setData([{ ...data[0], name: e.target.value }])
                 }
+                className="form-control"
               />
             </div>
             <div className="form-group my-3">
@@ -61,28 +67,31 @@ function Edit() {
                 onChange={(e) =>
                   setData([{ ...data[0], email: e.target.value }])
                 }
+                className="form-control"
               />
             </div>
             <div className="form-group my-3">
-              <label htmlFor="gender">Gender</label>
+              <label htmlFor="gender">Mobile</label>
               <input
-                value={student.gender}
-                type="text"
-                name="gender"
+                value={student.mobile}
+                type="number"
+                name="mobile"
                 required
                 onChange={(e) =>
-                  setData([{ ...data[0], gender: e.target.value }])
+                  setData([{ ...data[0], mobile: e.target.value }])
                 }
+                className="form-control"
               />
             </div>
             <div className="form-group my-3">
-              <label htmlFor="age">Age</label>
+              <label htmlFor="dob">Date of Birth</label>
               <input
-                value={student.age}
-                type="number"
-                name="age"
+                value={student.dob}
+                type="date"
+                name="dob"
                 required
-                onChange={(e) => setData([{ ...data[0], age: e.target.value }])}
+                onChange={(e) => setData([{ ...data[0], dob: e.target.value }])}
+                className="form-control"
               />
             </div>
             <div className="form-group my-3">
@@ -91,8 +100,8 @@ function Edit() {
               </button>
             </div>
           </form>
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
 }
